@@ -1,3 +1,15 @@
+const findDatasets = () => fetch('/dataset', {
+    method: 'GET',
+});
+
+const loadDataset = (name) => {
+    const params = new URLSearchParams();
+    params.append('name', name)
+    return fetch('http://localhost:5000/dataset/load?name=' + name.toString(), {
+        method: 'GET',
+    });
+}
+
 const plot_nyc_map = {
 
     init: function (width, height) {
@@ -28,7 +40,18 @@ const plot_nyc_map = {
                 burrowDropdown.append("option")
                     .attr("value", element)
                     .text(element);
-            plot(unique_burrows)
+
+            var button = d3.select('#button')           
+            button.on('click', () => {
+                var latitude = document.getElementById('latitude').value
+                var longitude = document.getElementById('latitude').value
+                var date = document.getElementById('date').value
+
+                console.log(date)
+                plot(unique_burrows)
+
+         
+            })
             })
         });
 
