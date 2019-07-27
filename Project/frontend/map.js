@@ -145,7 +145,7 @@ const plot_nyc_map = {
         });
     },
 }
-document.addEventListener("DOMContentLoaded", function (radVizEvent) {
+document.addEventListener("DOMContentLoaded", function () {
     plot_nyc_map.init(800, 700);
 });
 
