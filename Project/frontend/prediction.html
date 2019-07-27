@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v0.min.js"></script>
+<link rel="stylesheet" href="style_avengers.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+<head>
+
+</head>
+
+<body>
+        <nav class="nav navbar navbar-expand-lg	navbar-dark bg-dark sticky-top">
+                <div class="container">
+                    <a class="navbar-brand" href="frontend.html">New York City Accident Information</a>
+                    <button class="navbar-toggler"  type="button" >
+                        <span class="navbar-toggler-icon"></span>
+                    </button> 
+                    <div class="collapse navbar-collapse">
+                        <!--ml-auto to align the navbar items to the right -->
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link " href="frontend.html">Home </a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link " href="treeMap.html">Treemap</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="map.html">Map</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="sunBurst.html">Sun-Burst</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="prediction.html">Prediction</a>
+                            </li>
+                        
+                        </ul>
+                    </div>
+                </div>
+            </nav>	
+    <div class="container" style="margin-top: 10px"><h5>Below map displays datapoints on the New York city map which provide information about the collisions that led to injuries or casualities between 2017 and 2019</h5><br>More information can be accessed by hovering mouse over the data points.</div>
+    <div id='columnleft'>
+        
+
+
+    </div>
+    <div class='columncenter'>
+
+    </div>
+    <div class='columnright'>
+
+    </div>
+</body>
+<script src="accident_prediction_avengers.js"></script>
+
+
+</html>

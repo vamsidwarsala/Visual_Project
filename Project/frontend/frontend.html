@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<head>
+    <title>NYC Accident Info</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+	
+        <!-- -->
+        <!--Start of navigaton bar -->
+        <nav class="nav navbar navbar-expand-lg	navbar-dark bg-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="frontend.html">New York City Accident Information</a>
+                <button class="navbar-toggler"  type="button" >
+                    <span class="navbar-toggler-icon"></span>
+                </button> 
+                <div class="collapse navbar-collapse">
+                    <!--ml-auto to align the navbar items to the right -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="frontend.html">Home </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link " href="treeMap.html">Treemap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="map.html">Map</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="sunBurst.html">Sun-Burst</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prediction.html">Prediction</a>
+                        </li>
+                    
+                    </ul>
+                </div>
+            </div>
+        </nav>	
+        <!--End of navigaton bar -->
+    
+    
+        <div class="jumbotron">
+            <div class="container" style="margin-top: -20px;">                
+            </div>
+        </div>
+    
+    
+        <div class="container ">
+            <h3>Data Visualizations</h3>
+            <!--Card deck used to group the cards-->
+            <div class="card-deck">
+                <div class="card" style="width: 300px;">
+                    <img class="card-img-top" src="../images/treemap.PNG" alt="Card image cap" width="250" height="300">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;"><a href="treeMap.html" >Treemap</a></h5>
+                        <p class="card-text">Information about the factors that led to collisions</p>
+                       
+                       <p style="text-align: center"><a href="treeMap.html" class="btn btn-primary">View Tree Map</a></p>
+                    </div>
+                </div>
+                <div class="card" style="width: 300px;">
+                    <img class="card-img-top" src="../images/geomap.PNG" alt="Card image cap" width="250" height="300">
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;"><a href="map.html" >Map</a></h5>
+                        <p class="card-text">Information about collisions that led to injuries or casualities  </p>
+                        
+                        <p style="text-align: center"><a href="map.html" class="btn btn-primary  shadow_effect">View Map</a></p>
+                    </div>
+                </div>
+                <div class="card" style="width: 300px;" >
+                    <img class="card-img-top" src="../images/sun_burst.png" alt="Card image cap" width="200" height="300" >
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-align: center;"><a href="sunBurst.html" >Sun-Burst</a></h5>
+                        <p class="card-text" >Information about the frequency of collision in the area per day and time</p>
+                        
+                        <p style="text-align: center"><a href="sunBurst.html" class="btn btn-primary  shadow_effect">View Sun-burst</a></p>
+                    </div>
+                </div>
+     
+            </div>
+        </div> 
+       
+    
+    </body>
+    </html>

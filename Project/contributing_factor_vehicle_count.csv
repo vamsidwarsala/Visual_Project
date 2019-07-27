@@ -1,0 +1,58 @@
+id,parentId,count
+Fault,,
+Driver's Fault,Fault,
+No Driver's Involvment,Fault,
+Driver Inattention/Distraction,Driver's Fault,216044
+Failure to Yield Right-of-Way,Driver's Fault,65925
+Following Too Closely,Driver's Fault,63065
+Backing Unsafely,Driver's Fault,45341
+Other Vehicular,No Driver's Involvment,35353
+Passing or Lane Usage Improper,Driver's Fault,30647
+Passing Too Closely,Driver's Fault,29054
+Turning Improperly,Driver's Fault,27221
+Unsafe Lane Changing,Driver's Fault,24332
+Fatigued/Drowsy,Driver's Fault,23903
+Traffic Control Disregarded,Driver's Fault,16994
+Driver Inexperience,Driver's Fault,16262
+Reaction to Uninvolved Vehicle,Driver's Fault,11777
+Unsafe Speed,Driver's Fault,10722
+Lost Consciousness,Driver's Fault,10683
+Alcohol Involvement,Driver's Fault,10550
+Pavement Slippery,No Driver's Involvment,9916
+Prescription Medication,Driver's Fault,7759
+Oversized Vehicle,Driver's Fault,7212
+View Obstructed/Limited,No Driver's Involvment,7042
+Outside Car Distraction,No Driver's Involvment,6027
+Passenger Distraction,Driver's Fault,4611
+Physical Disability,Driver's Fault,4584
+Pedestrian/Bicyclist/Other Pedestrian Error/Confusion,No Driver's Involvment,4511
+Aggressive Driving/Road Rage,Driver's Fault,4291
+Brakes Defective,No Driver's Involvment,3323
+Fell Asleep,Driver's Fault,2649
+Glare,No Driver's Involvment,2246
+Obstruction/Debris,No Driver's Involvment,2153
+Failure to Keep Right,Driver's Fault,1803
+Other Electronic Device,No Driver's Involvment,1297
+Steering Failure,No Driver's Involvment,1282
+Pavement Defective,No Driver's Involvment,1272
+Illness,Driver's Fault,1912
+Tire Failure/Inadequate,Driver's Fault,1145
+Animals Action,No Driver's Involvment,796
+Driverless/Runaway Vehicle,No Driver's Involvment,698
+Lane Marking Improper/Inadequate,No Driver's Involvment,546
+Accelerator Defective,Driver's Fault,514
+Drugs (illegal),Driver's Fault,614
+Traffic Control Device Improper/Non-Working,No Driver's Involvment,358
+Cell Phone (hand-Held),Driver's Fault,310
+Cell Phone (hands-free),Driver's Fault,137
+Other Lighting Defects,No Driver's Involvment,103
+Tow Hitch Defective,No Driver's Involvment,97
+Using On Board Navigation Device,Driver's Fault,73
+Vehicle Vandalism,No Driver's Involvment,66
+Tinted Windows,Driver's Fault,65
+Eating or Drinking,Driver's Fault,62
+Headlights Defective,No Driver's Involvment,54
+Shoulders Defective/Improper,Driver's Fault,51
+Windshield Inadequate,Driver's Fault,46
+Texting,Driver's Fault,32
+Listening/Using Headphones,Driver's Fault,13

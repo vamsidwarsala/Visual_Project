@@ -1,0 +1,120 @@
+rect {
+  stroke: white;
+  fill: #05668D;
+  opacity: 0.3;
+  stroke-width: 2px;
+}
+
+.tooltip {	
+  position: absolute;
+  text-align: left;
+  width: 290px;
+  height: 100px;
+  padding: 3px;
+  margin-top: -50px;
+  margin-left: -20px;
+  font: 15px ;
+  font-family: 'Calibri' ;
+  pointer-events: none;
+}
+body,html{
+  height: 100%;
+}
+
+.jumbotron {
+  padding: 10px;
+  height: 350px;
+  background-image: url("../images/nyc.jpg");
+  background-size: cover;	
+  /* background-attachment: fixed; */
+}
+.card-text{
+  font-family: 'Calibri'
+}
+#active {
+  background-color: white;
+  color: white;
+}
+rect {
+  stroke: white;
+  fill: #05668D;
+  opacity: 0.3;
+  stroke-width: 2px;
+}
+
+.tooltip_map {	
+  position: absolute;
+  text-align: left;
+  width: 400px;
+  height: 100px;
+  padding: 3px;
+  margin-top: -50px;
+  margin-left: -20px;
+  font: 15px ;
+  font-family: 'Calibri' ;
+  pointer-events: none;
+}
+#columnleft {
+  margin-top: 100px;
+  margin-left: 10px;
+  float: left;
+  width: 20%;
+  padding: 10px;
+  height: 300px; 
+}
+.columncenter {
+  float: center;
+  width: 100%;
+  padding: 0px;
+  height: 300px; 
+}
+.columnright {
+  margin-top: 150px;
+  float: right;
+  width: 20%;
+  padding: 10px;
+  height: 300px; 
+}
+.option
+{
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   display: inline-block;
+   position: relative;
+   background-color: #72d2f8;
+   color: #008000;
+   top: 10px;
+   height: 30px;
+   width: 30px;
+   border: 0;
+   border-radius: 50px;
+   cursor: pointer;     
+   margin-right: 7px;
+   outline: none;
+}
+.option:checked::before
+{
+   position: absolute;
+   font: 13px/1 'Open Sans', sans-serif;
+   left: 11px;
+   top: 7px;
+   content: '\02143';
+   transform: rotate(40deg);
+}
+.option:hover
+{
+   background-color: #72d2f8;
+}
+.option:checked
+{
+   background-color: #f3a908;
+}
+label
+{
+   font: 15px/1.7 'Open Sans', sans-serif;
+   color: #333;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   cursor: pointer;
+} 
