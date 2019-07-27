@@ -94,7 +94,6 @@ const plot_nyc_map = {
             var collisionsDataYear = { "name": "Borough", "children": collisionsDataBorough };
             collisionsData.push({ year: year, collisionsData: collisionsDataYear })
         });
-        console.log(collisionsData);
         return collisionsData
     },
     sunburstPlot: function (data, width, height) {
@@ -103,14 +102,14 @@ const plot_nyc_map = {
         var color = that.colors[0].init();
         var format = d3.format(",d");
 
-        const root = d3.hierarchy(data)
+        var root = d3.hierarchy(data)
             .sum(d => d.size)
             .sort((a, b) => b.value - a.value);
 
         d3.partition()
             .size([2 * Math.PI, root.height + 1])(root);
 
-        var radius =Math.min(width, height) / 9;
+        var radius = Math.min(width, height) / 9;
         var arc = d3.arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
@@ -120,16 +119,17 @@ const plot_nyc_map = {
             .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1))
 
         root.each(d => d.current = d);
+
         d3.select("svg").select("g").remove();
-        const svg = d3.select("svg")
+        var svg = d3.select("svg")
             .style("width", width)
             .style("height", height)
             .style("font", "10px sans-serif")
 
-        const g = svg.append("g")
+        var g = svg.append("g")
             .attr("transform", `translate(${width / 2.2},${height / 2.2})`);
 
-        const path = g.append("g")
+        var path = g.append("g")
             .selectAll("path")
             .data(root.descendants())
             .enter().append("path")
@@ -146,7 +146,7 @@ const plot_nyc_map = {
 
 
         var boroughs = [{ "STATEN ISLAND": "SI" }]
-        const label = g.append("g")
+        var label = g.append("g")
             .attr("pointer-events", "none")
             .attr("text-anchor", "middle")
             .style("user-select", "none")
@@ -154,7 +154,7 @@ const plot_nyc_map = {
             .data(root.descendants())
             .enter().append("text")
             .attr("dy", "0.35em")
-            .attr("fill-opacity", d => +labelVisible(d.current))
+            .attr("fill-opacity", d => labelVisible(d.current))
             .attr("transform", d => labelTransform(d.current))
             .style("fill", "white")
             .style("font", function (d) {
@@ -168,7 +168,7 @@ const plot_nyc_map = {
             })
             .text(d => d.data.name);
 
-        const parent = g.append("g").selectAll("circle")
+        var parent = g.append("g").selectAll("circle")
             .data(root.descendants())
             .enter().append("circle")
             .attr("r", radius)
@@ -188,29 +188,29 @@ const plot_nyc_map = {
 
             const t = g.transition().duration(850);
             path.transition(t)
-                .tween("data", d => {
+                .tween("data", d => { 
                     const i = d3.interpolate(d.current, d.target);
                     return t => d.current = i(t);
                 })
                 .filter(function (d) {
-                    return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+                    return this.getAttribute("fill-opacity") || arcVisible(d.target);
                 })
-                .attr("fill-opacity", d => arcVisible(d.target) ? 1 : 0)
+                .attr("fill-opacity", d => arcVisible(d.target))
                 .attrTween("d", d => () => arc(d.current));
 
             label.filter(function (d) {
-                return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+                return this.getAttribute("fill-opacity") || labelVisible(d.target);
             }).transition(t)
-                .attr("fill-opacity", d => +labelVisible(d.target))
+                .attr("fill-opacity", d => labelVisible(d.target))
                 .attrTween("transform", d => () => labelTransform(d.current));
         }
 
         function arcVisible(d) {
-            return d.x1 > d.x0;
+            return (d.x1 > d.x0) ? 1 : 0;
         }
 
         function labelVisible(d) {
-            return (d.y1 - d.y0) * (d.x1 - d.x0) > 0.05;
+            return ((d.y1 - d.y0) * (d.x1 - d.x0) > 0.05) ? 1 : 0;
         }
         function labelTransform(d) {
             var x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
