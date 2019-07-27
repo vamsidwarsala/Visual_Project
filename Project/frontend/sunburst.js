@@ -46,12 +46,20 @@ const plot_sunburst_map = {
             dateData.push([date.getFullYear(), element["BOROUGH"].trim(), days[date.getDay()], hour]);
         });
 
+        // calculate number of collisions per region,day and hour
+        // counting in JSON form is fast and simple than array
         var totalCollisionsByYearAndDay = dateData.reduce(function (prev, curr) {
+            //consider only data that has BOROUGH 
             if (curr[1] != "") {
+                // check if year is already in data, if not then create one
                 if (prev[curr[0]]) {
+                    // check if data for the year has BOROUGH already in data, if not then create one
                     if (prev[curr[0]][curr[1]]) {
+                        // check if there is already data for the day of the year and BOROUGH, if not create one
                         if (prev[curr[0]][curr[1]][curr[2]]) {
+                            // check if there is already data for the hour of the day, year and BOROUGH, if not create one
                             if (prev[curr[0]][curr[1]][curr[2]][curr[3]]) {
+                                // increase the count
                                 prev[curr[0]][curr[1]][curr[2]][curr[3]] += 1;
                             } else {
                                 prev[curr[0]][curr[1]][curr[2]][curr[3]] = 1;
@@ -77,6 +85,7 @@ const plot_sunburst_map = {
         }, {});
 
         var collisionsData = [];
+        //converting the data into parent and child format to use for sun burst
         Object.keys(totalCollisionsByYearAndDay).forEach(year => {
             var collisionsDataBorough = [];
             Object.keys(totalCollisionsByYearAndDay[year]).forEach(borough => {
@@ -97,19 +106,22 @@ const plot_sunburst_map = {
         return collisionsData
     },
     sunburstPlot: function (data, width, height) {
-
         const that = this;
         var color = that.colors[0].init();
+        // to conver the numbers into human readble format i.e instead of 1450 we will show 1,450
         var format = d3.format(",d");
 
+        // create hierarchy data based on size and sorting in descending order in clockwise direction
         var root = d3.hierarchy(data)
             .sum(d => d.size)
             .sort((a, b) => b.value - a.value);
 
+        //data partition
         d3.partition()
             .size([2 * Math.PI, root.height + 1])(root);
 
         var radius = Math.min(width, height) / 9;
+        //arc for each path
         var arc = d3.arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
@@ -133,17 +145,17 @@ const plot_sunburst_map = {
             .selectAll("path")
             .data(root.descendants())
             .enter().append("path")
+            // child and parent in same color
             .style("fill", function (d) {
                 return color((d.children ? d : d.parent).data.name);
             })
-            .attr("fill-opacity", d => arcVisible(d.current) ? 1 : 0)
+            .attr("fill-opacity", 1)
             .attr("d", d => arc(d.current))
             .style("cursor", "pointer")
             .on("click", clicked);
 
         path.append("title")
             .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
-
 
         var boroughs = [{ "STATEN ISLAND": "SI" }]
         var label = g.append("g")
@@ -160,7 +172,8 @@ const plot_sunburst_map = {
             .style("font", d => labelFont(d))
             .text(d => d.data.name);
 
-        var parent = g.append("g").selectAll("circle")
+        //center circle
+        var center = g.append("g").selectAll("circle")
             .data(root.descendants())
             .enter().append("circle")
             .attr("r", radius)
@@ -169,8 +182,9 @@ const plot_sunburst_map = {
             .on("click", clicked);
 
         function clicked(p) {
-            parent.datum(p.parent || root);
+            center.datum(p.parent || root);
 
+            // re calculate the traget co-ordinates
             root.each(d => d.target = {
                 x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
                 x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
@@ -178,7 +192,9 @@ const plot_sunburst_map = {
                 y1: Math.max(0, d.y1 - p.depth)
             });
 
+            // for smooth tranisition
             const t = g.transition().duration(850);
+            // re shaping the arcs with updated center
             path.transition(t)
                 .tween("data", d => {
                     const i = d3.interpolate(d.current, d.target);
@@ -187,7 +203,7 @@ const plot_sunburst_map = {
                 .filter(function (d) {
                     return this.getAttribute("fill-opacity") || arcVisible(d.target);
                 })
-                .attr("fill-opacity", d => arcVisible(d.target))
+                .attr("fill-opacity", 1)
                 .attrTween("d", d => () => arc(d.current));
 
             label.filter(function (d) {
@@ -197,10 +213,7 @@ const plot_sunburst_map = {
                 .attrTween("transform", d => () => labelPosition(d.current));
         }
 
-        function arcVisible(d) {
-            return (d.x1 > d.x0) ? 1 : 0;
-        }
-
+        // decerease font size based on the content
         function labelFont(d) {
             var font = "10px sans-serif"
             boroughs.forEach(element => {
@@ -208,12 +221,15 @@ const plot_sunburst_map = {
                     font = "7px sans-serif"
                 }
             })
-            return font
+            return font;
         }
 
+        // to disable labels for the arc that are too small to show labels
         function labelOpacity(d) {
             return ((d.y1 - d.y0) * (d.x1 - d.x0) > 0.05) ? 1 : 0;
         }
+
+        // positions of labels on the arc
         function labelPosition(d) {
             var x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
             var y = (d.y0 + d.y1) / 2 * radius;
