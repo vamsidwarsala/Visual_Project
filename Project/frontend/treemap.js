@@ -1,4 +1,4 @@
-const plot_nyc_map = {
+const plot_nyc_treemap = {
 
     init: function (width, height) {
         this.width = width;
@@ -17,55 +17,47 @@ const plot_nyc_map = {
         d3.csv('../contributing_factor_vehicle_count.csv', function (error, dataset) {
             if (error) throw error;
             data = d3.stratify()(dataset);
-            drawViz(data);
+            draw_treemap(data);
         });
 
-        function drawViz(data) {
+        function draw_treemap(data) {
             // Declare d3 layout
             var layout = d3.treemap().size([width, height]).paddingInner(2).paddingOuter(4);
-            // Layout + Data
             var root = d3.hierarchy(data).sum(function (d) { return d.data.count; });
-
             var tooltip = d3.select("body")
                 .append("div")
                 //calling tooltip class in css
                 .attr("class", "tooltip")
             var mouse_over = function (element) {
-               var total_collisions = 717543
+                var total_collisions = 717543
                 tooltip.style("opacity", 1)
-                    .html("<table bgcolor='FFFFFF'style='border: 1px solid black'><tr><td>"+"<b>Collision Reason</b>"+ "<td>"+ element.data.id +"</td></tr>"+
-                    "<tr><td>"+"<b>Fault type</b>"+ "<td>"+ element.data.data.parentId +"</td></tr>" + 
-                    "<tr><td>"+"<b>No of Collisions</b>"+ "<td>"+ element.data.data.count +"</td></tr>" +
-                    "<tr><td>"+"<b>Percentage</b>"+ "<td>"+ ((Math.round((element.data.data.count/total_collisions)*10000))/100) +'%' +"</td></tr>")
-                    .style("left", d3.mouse(this)[0]+10 +  "px")
-                    .style("top", d3.mouse(this)[1] +  "px")
+                    .html("<table bgcolor='FFFFFF'style='border: 1px solid black'><tr><td>" + "<b>Collision Reason</b>" + "<td>" + element.data.id + "</td></tr>" +
+                        "<tr><td>" + "<b>Fault type</b>" + "<td>" + element.data.data.parentId + "</td></tr>" +
+                        "<tr><td>" + "<b>No of Collisions</b>" + "<td>" + element.data.data.count + "</td></tr>" +
+                        "<tr><td>" + "<b>Percentage</b>" + "<td>" + ((Math.round((element.data.data.count / total_collisions) * 10000)) / 100) + '%' + "</td></tr>")
+                    .style("left", d3.mouse(this)[0] + 10 + "px")
+                    .style("top", d3.mouse(this)[1] + "px")
                 d3.select(this)
-                .style("stroke", "black")
-                .style("opacity", 1)
+                    .style("stroke", "black")
+                    .style("opacity", 1)
             }
-
             var mouse_leave = function (element) {
                 tooltip.style("opacity", 0)
                 d3.select(this)
-                .style("stroke", "none")
-                .style("opacity", 0.8)
+                    .style("stroke", "none")
+                    .style("opacity", 0.8)
             }
-
             var nodes = root.leaves();
             var i = -1;
-
-
             var node = function (data) {
                 i++;
-                list1 = nodes[i].data.id.split(' ');
+                list = nodes[i].data.id.split(' ');
                 var str = ''
-
-                for (var j = 0; j < list1.length; j++) {
-                    str = str + list1[j][0] 
+                for (var j = 0; j < list.length; j++) {
+                    str = str + list[j][0]
                 }
-                return str 
-            }         
-        
+                return str
+            }
             layout(root);
             g.selectAll('rect').data(nodes).enter().append('rect')
                 .on("mouseover", mouse_over)
@@ -74,32 +66,30 @@ const plot_nyc_map = {
                 .attr('y', function (d) { return d.y0; })
                 .attr('width', function (d) { return d.x1 - d.x0; })
                 .attr('height', function (d) { return d.y1 - d.y0; })
-                .style("fill", function (d) { 
-                    if(d.parent.data.id=="Driver's Fault"){
+                .style("fill", function (d) {
+                    if (d.parent.data.id == "Driver's Fault") {
                         return "green"
                     }
-                    else{
-                        return "#FF4C33"}})
-                .style('opacity',0.8)
+                    else {
+                        return "#FF4C33"
+                    }
+                })
+                .style('opacity', 0.8)
             g.selectAll("text")
                 .data(nodes)
                 .enter()
                 .append("text")
-                .attr("x", function (d) { return d.x0+(d.x1-d.x0)/2 })    
-                .attr("y", function (d) { return d.y0+(d.y1-d.y0)/2 })    
+                .attr("x", function (d) { return d.x0 + (d.x1 - d.x0) / 2 })
+                .attr("y", function (d) { return d.y0 + (d.y1 - d.y0) / 2 })
                 .text(node)
-                .attr("font-size", function (d) { return (d.x1-d.x0)/7 })
+                .attr("font-size", function (d) { return (d.x1 - d.x0) / 7 })
                 .attr("font-weight", "bold")
                 .attr("fill", "white")
                 .attr("text-anchor", "middle")
                 .style("dominant-baseline", "middle")
-
         }
-
     },
-
-
 }
 document.addEventListener("DOMContentLoaded", function (radVizEvent) {
-    plot_nyc_map.init(1150, 550);
+    plot_nyc_treemap.init(1150, 550);
 });
