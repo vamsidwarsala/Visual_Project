@@ -75,12 +75,6 @@ rect {
   padding: 10px;
   height: 300px; 
 }
-
-label
-{
-   font: 15px/1.7 'Open Sans', sans-serif;
-   color: #333;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
-   cursor: pointer;
-} 
+#date{
+  margin-left: 500px
+}
