@@ -3,8 +3,9 @@
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="http://d3js.org/topojson.v0.min.js"></script>
-<link rel="stylesheet" href="style_avengers.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 
 <head>
@@ -12,39 +13,53 @@
 </head>
 
 <body>
-        <nav class="nav navbar navbar-expand-lg	navbar-dark bg-dark sticky-top">
-                <div class="container">
-                    <a class="navbar-brand" href="frontend.html">New York City Accident Information</a>
-                    <button class="navbar-toggler"  type="button" >
-                        <span class="navbar-toggler-icon"></span>
-                    </button> 
-                    <div class="collapse navbar-collapse">
-                        <!--ml-auto to align the navbar items to the right -->
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link " href="frontend.html">Home </a>
-                            </li>
-                            <li class="nav-item ">
-                                <a class="nav-link " href="treeMap.html">Treemap</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link " href="map.html">Map</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="sunBurst.html">Sun-Burst</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="prediction.html">Prediction</a>
-                            </li>
-                        
-                        </ul>
-                    </div>
-                </div>
-            </nav>	
-    <div class="container" style="margin-top: 10px"><h5>Below map displays datapoints on the New York city map which provide information about the collisions that led to injuries or casualities between 2017 and 2019</h5><br>More information can be accessed by hovering mouse over the data points.</div>
-    <div id='columnleft'>
-        
+    <nav class="nav navbar navbar-expand-lg	navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="frontend.html">New York City Accident Information</a>
+            <button class="navbar-toggler" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <!--ml-auto to align the navbar items to the right -->
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link " href="frontend.html">Home </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link " href="treeMap.html">Treemap</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="map.html">Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sunBurst.html">Sun-Burst</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="prediction.html">Prediction</a>
+                    </li>
 
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="margin-top: 10px">
+        <h5>Prediction</h5><br>More information can be accessed by hovering mouse over the data point.
+    </div>
+    <div class='columnleft'>
+        <b>Please enter date and time</b>
+        <input type="datetime-local" id="date" name="input-date" min="2018-01-01" max="2019-12-31"><br><br>
+        <b>Please enter latitude</b>
+        <input type="number" id="latitude" name="latitude"><br><br>
+        <b>Please enter longitude</b>
+        <input type="number" id="longitude" name="longitude"><br><br>
+        <b>Please select borrow</select></b>
+        <div class="dropdown">
+            <select id="dataset" name="dataset">
+                <option value="Red Wine Quality">Red wine dataset</option>
+                <option value="White Wine Quality">White wine dataset</option>
+                <option value="Iris data">Iris dataset</option>
+            </select>
+        </div>
 
     </div>
     <div class='columncenter'>
@@ -54,7 +69,7 @@
 
     </div>
 </body>
-<script src="accident_prediction_avengers.js"></script>
+<script src="prediction.js"></script>
 
 
 </html>
