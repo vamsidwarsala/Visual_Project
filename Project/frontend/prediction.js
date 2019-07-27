@@ -28,12 +28,12 @@ const plot_nyc_map = {
                 burrowDropdown.append("option")
                     .attr("value", element)
                     .text(element);
-            plot()
+            plot(unique_burrows)
             })
         });
 
 
-            function plot() {
+            function plot(unique_burrows) {
 
                 d3.json("../NYC_mapcoordinates.json", function ( NYC_MapInfo) {
 
@@ -45,8 +45,11 @@ const plot_nyc_map = {
                     // now you can create new path function with 
                     // correctly centered projection
                     var path = d3.geo.path().projection(projection);
-
-
+                    var borough_dict = {}
+                    for(i=0;i<unique_burrows.length;i++)
+                    {
+                        borough_dict[unique_burrows[i]] = '0'
+                    }
                     var tooltip = d3.select("body")
                         .append("div")
                         //calling tooltip class in css
