@@ -54,7 +54,7 @@ rect {
   font-family: 'Calibri' ;
   pointer-events: none;
 }
-#columnleft {
+.columnleft {
   margin-top: 100px;
   margin-left: 10px;
   float: left;
@@ -74,7 +74,4 @@ rect {
   width: 20%;
   padding: 10px;
   height: 300px; 
-}
-#date{
-  margin-left: 500px
 }
