@@ -16,13 +16,28 @@ const plot_nyc_map = {
         var svg = d3.select(".columncenter").append("svg")
             .attr("width", width)
             .attr("height", height);
+    
+        d3.csv("../nyc_data.csv", function (collisions) {
+            boroughs = []
+            for(i=0;i<collisions.length;i++){
+                boroughs.push(collisions[i]['BOROUGH'])
+            }
+            var unique_burrows = boroughs.filter(function (element, index) {
+                return boroughs.indexOf(element) == index;
+            })
+            var burrowDropdown = d3.select("#borough");
 
-       // d3.csv("sample.csv", function (error, collisions) {
+            unique_burrows.forEach(element => {
+                burrowDropdown.append("option")
+                    .attr("value", element)
+                    .text(element);
+            })
+        });
 
 
             function plot(data) {
 
-                d3.json("csvjson.json", function (error, NYC_MapInfo) {
+                d3.json("csvjson.json", function ( NYC_MapInfo) {
 
                     // after loading geojson, use d3.geo.centroid to find out 
                     // where you need to center your map
@@ -39,7 +54,6 @@ const plot_nyc_map = {
                         //calling tooltip class in css
                         .attr("class", "tooltip")
                     var mouse_over = function (element) {
-                        console.log("ele", element)
                         tooltip.style("opacity", 1)
                             .html("<table bgcolor='FFFFFF'style='border: 1px solid black'><tr><td>" + "<b>Date</b>" + "<td>" + element.DATE + "</td></tr>" +
                                 "<tr><td>" + "<b>Time</b>" + "<td>" + element.TIME + "</td></tr>" +
