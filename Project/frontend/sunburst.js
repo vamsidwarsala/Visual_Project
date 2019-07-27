@@ -5,68 +5,71 @@ const plot_nyc_map = {
     colors: [
         {
             name: "Categorical",
-            init: function (data) {
-                var color = d3.scaleOrdinal(d3.schemeCategory10).domain(data.map(d => d.streetName));
+            init: function () {
+                var color = d3.scaleOrdinal(d3.schemeCategory10);
                 return color;
             }
         }
     ],
     init: function (width, height) {
-        this.width = width;
-        this.height = height;
 
         const that = this;
         var totalCollisionsByYearAndDay = {};
         //loading dataset
         d3.csv("../nyc_data.csv").then(function (data) {
             totalCollisionsByYearAndDay = that.prepareData(data);
-           // console.log(totalCollisionsByYearAndDay);
-            var year = 2019;
-            var collisionsData = [];
+            var yearDropdown = d3.select("#years");
             totalCollisionsByYearAndDay.forEach(element => {
-                if (element.year == year) {
-                    collisionsData = element.collisionsData;
-                }
+                yearDropdown.append("option")
+                    .attr("value", element.year)
+                    .text(element.year);
             })
-            that.scatterPlot(collisionsData, year, width, height);
-
+            var findYearAndPlot = function () {
+                totalCollisionsByYearAndDay.forEach(element => {
+                    if (element.year == document.getElementById("years").value) {
+                        collisionsData = element.collisionsData;
+                        that.sunburstPlot(collisionsData, width, height);
+                    }
+                })
+            };
+            findYearAndPlot();
+            yearDropdown.on('change', findYearAndPlot);
         });
     },
-
     prepareData: function (data) {
-
         var dateData = [];
+
+        var days = this.fullNames.dayNames;
         data.forEach(element => {
             var date = new Date(element.DATE);
             var hour = parseInt(element.TIME.split(":")[0]);
-            dateData.push([date.getFullYear(), element["BOROUGH"].trim(), date.getDay(), hour]);
+            dateData.push([date.getFullYear(), element["BOROUGH"].trim(), days[date.getDay()], hour]);
         });
-        var days = this.fullNames.dayNames;
 
         var totalCollisionsByYearAndDay = dateData.reduce(function (prev, curr) {
             if (curr[1] != "") {
                 if (prev[curr[0]]) {
                     if (prev[curr[0]][curr[1]]) {
-                        if (prev[curr[0]][curr[1]][days[curr[2]]]) {
-                            if (prev[curr[0]][curr[1]][days[curr[2]]][curr[3]]) {
-                                prev[curr[0]][curr[1]][days[curr[2]]][curr[3]] += 1;
+                        if (prev[curr[0]][curr[1]][curr[2]]) {
+                            if (prev[curr[0]][curr[1]][curr[2]][curr[3]]) {
+                                prev[curr[0]][curr[1]][curr[2]][curr[3]] += 1;
                             } else {
-                                prev[curr[0]][curr[1]][days[curr[2]]][curr[3]] = 1;
+                                prev[curr[0]][curr[1]][curr[2]][curr[3]] = 1;
                             }
                         } else {
-                            prev[curr[0]][curr[1]][days[curr[2]]] = {}
-                            prev[curr[0]][curr[1]][days[curr[2]]][curr[3]] = 1;
+                            prev[curr[0]][curr[1]][curr[2]] = {}
+                            prev[curr[0]][curr[1]][curr[2]][curr[3]] = 1;
                         }
                     } else {
                         prev[curr[0]][curr[1]] = {}
-                        prev[curr[0]][curr[1]][days[curr[2]]] = {}
-                        prev[curr[0]][curr[1]][days[curr[2]]][curr[3]] = 1;
+                        prev[curr[0]][curr[1]][curr[2]] = {}
+                        prev[curr[0]][curr[1]][curr[2]][curr[3]] = 1;
                     }
                 } else {
                     var day = {};
                     day[curr[1]] = {}
-                    day[curr[1]][days[curr[2]]] = {}
-                    day[curr[1]][days[curr[2]]][curr[3]] = 1;
+                    day[curr[1]][curr[2]] = {}
+                    day[curr[1]][curr[2]][curr[3]] = 1;
                     prev[curr[0]] = day;
                 }
             }
@@ -91,64 +94,69 @@ const plot_nyc_map = {
             var collisionsDataYear = { "name": "Borough", "children": collisionsDataBorough };
             collisionsData.push({ year: year, collisionsData: collisionsDataYear })
         });
+        console.log(collisionsData);
         return collisionsData
     },
-    scatterPlot: function (data, year, width, height) {
-        //console.log(data);
-        //console.log("In Plot");
-        //var margin = { top: 20, right: 20, bottom: 30, left: 40 };
-        var radius = Math.min(width, height) / 2;
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
+    sunburstPlot: function (data, width, height) {
 
-        // Create primary <g> element
-        var svg = d3.select('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
-            .style("font", "10px sans-serif");
+        const that = this;
+        var color = that.colors[0].init();
+        var format = d3.format(",d");
 
-        // Data strucure
-        var partition = d3.partition()
-            .size([2 * Math.PI, radius]);
+        const root = d3.hierarchy(data)
+            .sum(d => d.size)
+            .sort((a, b) => b.value - a.value);
 
-        // Find data root
-        var root = d3.hierarchy(data)
-            .sum(function (d) { return d.size });
+        d3.partition()
+            .size([2 * Math.PI, root.height + 1])(root);
 
-        var boroughs = [{ "STATEN ISLAND": "SI" }]
-        // Size arcs
-        partition(root);
-        format = d3.format(",d")
+        var radius =Math.min(width, height) / 9;
         var arc = d3.arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
             .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
-            .padRadius(radius / 2)
-            .innerRadius(d => d.y0)
-            .outerRadius(d => d.y1 - 1)
+            .padRadius(radius * 1.5)
+            .innerRadius(d => d.y0 * radius)
+            .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1))
 
-        svg.selectAll('path')
-            .data(root.descendants().filter(d => d.depth))
+        root.each(d => d.current = d);
+        d3.select("svg").select("g").remove();
+        const svg = d3.select("svg")
+            .style("width", width)
+            .style("height", height)
+            .style("font", "10px sans-serif")
+
+        const g = svg.append("g")
+            .attr("transform", `translate(${width / 2.2},${height / 2.2})`);
+
+        const path = g.append("g")
+            .selectAll("path")
+            .data(root.descendants())
             .enter().append("path")
-            .attr("d", arc)
-            .style('stroke', '#fff')
-            .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); })
-            .append("title")
+            .style("fill", function (d) {
+                return color((d.children ? d : d.parent).data.name);
+            })
+            .attr("fill-opacity", d => arcVisible(d.current) ? 1 : 0)
+            .attr("d", d => arc(d.current))
+            .style("cursor", "pointer")
+            .on("click", clicked);
+
+        path.append("title")
             .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
 
-        svg.append("g")
+
+        var boroughs = [{ "STATEN ISLAND": "SI" }]
+        const label = g.append("g")
             .attr("pointer-events", "none")
             .attr("text-anchor", "middle")
+            .style("user-select", "none")
             .selectAll("text")
-            .data(root.descendants().slice(1))
+            .data(root.descendants())
             .enter().append("text")
-            .attr("transform", function (d) {
-                const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-                const y = (d.y0 + d.y1) / 2;
-                return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-            })
             .attr("dy", "0.35em")
+            .attr("fill-opacity", d => +labelVisible(d.current))
+            .attr("transform", d => labelTransform(d.current))
+            .style("fill", "white")
             .style("font", function (d) {
                 var font = "10px sans-serif"
                 boroughs.forEach(element => {
@@ -156,20 +164,69 @@ const plot_nyc_map = {
                         font = "7px sans-serif"
                     }
                 })
-                if (d.depth && (d.y0 + d.y1) / 2 * (d.x1 - d.x0) < 10) {
-                    //console.log((d.y0 + d.y1) / 2 * (d.x1 - d.x0), d.data.name, "check");
-                    fontsize = Math.floor((d.y0 + d.y1) / 2 * (d.x1 - d.x0))
-                    font = fontsize + "px sans-serif"
-                }
                 return font
             })
             .text(d => d.data.name);
-      
+
+        const parent = g.append("g").selectAll("circle")
+            .data(root.descendants())
+            .enter().append("circle")
+            .attr("r", radius)
+            .attr("fill", "none")
+            .attr("pointer-events", "all")
+            .on("click", clicked);
+
+        function clicked(p) {
+            parent.datum(p.parent || root);
+
+            root.each(d => d.target = {
+                x0: Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                x1: Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) * 2 * Math.PI,
+                y0: Math.max(0, d.y0 - p.depth),
+                y1: Math.max(0, d.y1 - p.depth)
+            });
+
+            const t = g.transition().duration(850);
+            path.transition(t)
+                .tween("data", d => {
+                    const i = d3.interpolate(d.current, d.target);
+                    return t => d.current = i(t);
+                })
+                .filter(function (d) {
+                    return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+                })
+                .attr("fill-opacity", d => arcVisible(d.target) ? 1 : 0)
+                .attrTween("d", d => () => arc(d.current));
+
+            label.filter(function (d) {
+                return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+            }).transition(t)
+                .attr("fill-opacity", d => +labelVisible(d.target))
+                .attrTween("transform", d => () => labelTransform(d.current));
+        }
+
+        function arcVisible(d) {
+            return d.x1 > d.x0;
+        }
+
+        function labelVisible(d) {
+            return (d.y1 - d.y0) * (d.x1 - d.x0) > 0.05;
+        }
+        function labelTransform(d) {
+            var x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
+            var y = (d.y0 + d.y1) / 2 * radius;
+            //to center the text of the parent
+            if (d.y0 == 0) {
+                x = 270
+                y = 0;
+            }
+            return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+        }
     }
 }
 
 
 
 document.addEventListener("DOMContentLoaded", function (radVizEvent) {
-    plot_nyc_map.init(1000, 550);
+    plot_nyc_map.init(1000, 650);
 });
