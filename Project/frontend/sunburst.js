@@ -1,4 +1,4 @@
-const plot_nyc_map = {
+const plot_sunburst_map = {
     fullNames: {
         dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     },
@@ -154,18 +154,10 @@ const plot_nyc_map = {
             .data(root.descendants())
             .enter().append("text")
             .attr("dy", "0.35em")
-            .attr("fill-opacity", d => labelVisible(d.current))
-            .attr("transform", d => labelTransform(d.current))
+            .attr("fill-opacity", d => labelOpacity(d.current))
+            .attr("transform", d => labelPosition(d.current))
             .style("fill", "white")
-            .style("font", function (d) {
-                var font = "10px sans-serif"
-                boroughs.forEach(element => {
-                    if (d.data.name == Object.keys(element)) {
-                        font = "7px sans-serif"
-                    }
-                })
-                return font
-            })
+            .style("font", d => labelFont(d))
             .text(d => d.data.name);
 
         var parent = g.append("g").selectAll("circle")
@@ -188,7 +180,7 @@ const plot_nyc_map = {
 
             const t = g.transition().duration(850);
             path.transition(t)
-                .tween("data", d => { 
+                .tween("data", d => {
                     const i = d3.interpolate(d.current, d.target);
                     return t => d.current = i(t);
                 })
@@ -199,23 +191,33 @@ const plot_nyc_map = {
                 .attrTween("d", d => () => arc(d.current));
 
             label.filter(function (d) {
-                return this.getAttribute("fill-opacity") || labelVisible(d.target);
+                return this.getAttribute("fill-opacity") || labelOpacity(d.target);
             }).transition(t)
-                .attr("fill-opacity", d => labelVisible(d.target))
-                .attrTween("transform", d => () => labelTransform(d.current));
+                .attr("fill-opacity", d => labelOpacity(d.target))
+                .attrTween("transform", d => () => labelPosition(d.current));
         }
 
         function arcVisible(d) {
             return (d.x1 > d.x0) ? 1 : 0;
         }
 
-        function labelVisible(d) {
+        function labelFont(d) {
+            var font = "10px sans-serif"
+            boroughs.forEach(element => {
+                if (d.data.name == Object.keys(element)) {
+                    font = "7px sans-serif"
+                }
+            })
+            return font
+        }
+
+        function labelOpacity(d) {
             return ((d.y1 - d.y0) * (d.x1 - d.x0) > 0.05) ? 1 : 0;
         }
-        function labelTransform(d) {
+        function labelPosition(d) {
             var x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
             var y = (d.y0 + d.y1) / 2 * radius;
-            //to center the text of the parent
+            //to center the text of the parent label(in-line)
             if (d.y0 == 0) {
                 x = 270
                 y = 0;
@@ -226,7 +228,6 @@ const plot_nyc_map = {
 }
 
 
-
-document.addEventListener("DOMContentLoaded", function (radVizEvent) {
-    plot_nyc_map.init(1000, 650);
+document.addEventListener("DOMContentLoaded", function () {
+    plot_sunburst_map.init(1000, 650);
 });
