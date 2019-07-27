@@ -17,10 +17,17 @@ const plot_nyc_treemap = {
         d3.csv('../contributing_factor_vehicle_count.csv', function (error, dataset) {
             if (error) throw error;
             data = d3.stratify()(dataset);
-            draw_treemap(data);
+            var total_collisions=0;
+            dataset.forEach(element => {
+                if(element.count !="" && !isNaN(element.count)){
+                 total_collisions+=parseInt(element.count)
+                }
+            });
+            draw_treemap(data,total_collisions);
         });
 
-        function draw_treemap(data) {
+        function draw_treemap(data,total_collisions) {
+
             // Declare d3 layout
             var layout = d3.treemap().size([width, height]).paddingInner(2).paddingOuter(4);
             var root = d3.hierarchy(data).sum(function (d) { return d.data.count; });
@@ -29,7 +36,6 @@ const plot_nyc_treemap = {
                 //calling tooltip class in css
                 .attr("class", "tooltip")
             var mouse_over = function (element) {
-                var total_collisions = 717543
                 tooltip.style("opacity", 1)
                     .html("<table bgcolor='FFFFFF'style='border: 1px solid black'><tr><td>" + "<b>Collision Reason</b>" + "<td>" + element.data.id + "</td></tr>" +
                         "<tr><td>" + "<b>Fault type</b>" + "<td>" + element.data.data.parentId + "</td></tr>" +
