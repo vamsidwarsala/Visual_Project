@@ -62,6 +62,17 @@ rect {
   padding: 10px;
   height: 300px; 
 }
+.dateTime{
+  width: 20%;
+  padding: 10px;
+  margin-left: 550px;
+}
+.prediction_map {
+  margin-top: -40px;
+  margin-left: 350px;
+  padding: 0px;
+  height: 300px; 
+}
 .columncenter {
   float: center;
   width: 100%;
@@ -74,4 +85,10 @@ rect {
   width: 20%;
   padding: 10px;
   height: 300px; 
+}
+.loading{
+  cursor: progress;
+}
+.default{
+   cursor: default; 
 }

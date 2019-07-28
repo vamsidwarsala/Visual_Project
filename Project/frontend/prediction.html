@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="http://d3js.org/topojson.v0.min.js"></script>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
 <head>
-
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
@@ -37,38 +32,25 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="prediction.html">Prediction</a>
                     </li>
-
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container" style="margin-top: 10px">
-        <h5>Prediction</h5><br>More information can be accessed by hovering mouse over the data point.
+        Please enter date, time and click on location to know the chance of collision %. &nbsp;
+        More information can be accessed by hovering mouse over the data point.
     </div>
-    <div class='columnleft'>
-        <b>Please enter date and time</b>
+    <div class='dateTime'>
+        <b>Please enter Date and Time</b>
         <input type="datetime-local" id="date" name="input-date" min="2018-01-01" max="2019-12-31"><br><br>
-        <b>Please enter latitude</b>
-        <input type="number" id="latitude" name="latitude"><br><br>
-        <b>Please enter longitude</b>
-        <input type="number" id="longitude" name="longitude"><br><br>
-        <b>Please select borough</select></b>
-        <div class="dropdown">
-            <select id="borough" name="borough">
-            </select>
-        </div><br>
-        <input id='button' type="submit" value="Submit">
-
-
     </div>
-    <div class='columncenter'>
-
-    </div>
-    <div class='columnright'>
+    <div class='prediction_map'>
 
     </div>
 </body>
-<script src="prediction.js"></script>
 
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v0.min.js"></script>
+<script src="prediction.js"></script>
 
 </html>
