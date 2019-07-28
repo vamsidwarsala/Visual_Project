@@ -21,6 +21,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.externals import joblib
+from os import path
 
 
 
@@ -30,7 +31,9 @@ cors = CORS(app)
 @app.route('/buildmodel', methods=['POST'])
 @cross_origin()
 def build_model():
-    collision_df = pd.read_csv("D:\\MACS\\Visual Analytics\\Project\\NYPD_Motor_Vehicle_Collisions.csv")
+    current_directory_path = path.dirname(__file__)
+    csv_file_path = path.abspath(path.join(current_directory_path, "..","nyc_data.csv"))
+    collision_df = pd.read_csv(csv_file_path)
     #dropping the unnecessary columns which have large number of number of null values
     collision_df.drop(['ZIP CODE','LOCATION', 'ON STREET NAME', 'CROSS STREET NAME','OFF STREET NAME','CONTRIBUTING FACTOR VEHICLE 1', 'CONTRIBUTING FACTOR VEHICLE 2','CONTRIBUTING FACTOR VEHICLE 3', 'CONTRIBUTING FACTOR VEHICLE 4','CONTRIBUTING FACTOR VEHICLE 5', 'UNIQUE KEY', 'VEHICLE TYPE CODE 1','VEHICLE TYPE CODE 2', 'VEHICLE TYPE CODE 3', 'VEHICLE TYPE CODE 4','VEHICLE TYPE CODE 5'], axis=1, inplace=True)
     #Replace unspecified values with NaN
@@ -96,14 +99,16 @@ def build_model():
     random_forest_classifier = RandomForestClassifier(n_estimators=300, max_depth=10,max_features= 'sqrt',random_state=0, n_jobs=-1)
     random_forest_classifier.fit(collision_df_features_train,collision_df_target_train)
     #Saving the final random_forest_classifier model for predictions
-    file_name_path = 'C:\\Users\\Abraham Vineel\\Desktop\\final_random_forest_model.sav'
+    file_name_path = 'final_random_forest_model.sav'
     joblib.dump(random_forest_classifier, file_name_path)
     return "Model Successfully built and Saved"
 
 @app.route('/predict', methods=['POST'])
 @cross_origin()
 def predict():
-    loaded_model = joblib.load("../model/random_forest_model.sav")
+    current_directory_path = path.dirname(__file__)
+    model_file_path = path.abspath(path.join(current_directory_path, "..", "model","random_forest_model.sav"))
+    loaded_model = joblib.load(model_file_path)
     date = request.args.get('date')
     time = request.args.get('time')
     latitude = request.args.get('latitude')
