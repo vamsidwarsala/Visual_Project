@@ -145,7 +145,7 @@ const plot_sunburst_map = {
             .selectAll("path")
             .data(root.descendants())
             .enter().append("path")
-            // child and parent in same color
+            // to show  last child and parent in same color
             .style("fill", function (d) {
                 return color((d.children ? d : d.parent).data.name);
             })
@@ -181,6 +181,7 @@ const plot_sunburst_map = {
             .attr("pointer-events", "all")
             .on("click", clicked);
 
+        // zoom function is referenced from https://jsfiddle.net/qo1vwL6k/1/
         function clicked(p) {
             center.datum(p.parent || root);
 
@@ -200,15 +201,9 @@ const plot_sunburst_map = {
                     const i = d3.interpolate(d.current, d.target);
                     return t => d.current = i(t);
                 })
-                .filter(function (d) {
-                    return this.getAttribute("fill-opacity") || arcVisible(d.target);
-                })
-                .attr("fill-opacity", 1)
                 .attrTween("d", d => () => arc(d.current));
 
-            label.filter(function (d) {
-                return this.getAttribute("fill-opacity") || labelOpacity(d.target);
-            }).transition(t)
+            label.transition(t)
                 .attr("fill-opacity", d => labelOpacity(d.target))
                 .attrTween("transform", d => () => labelPosition(d.current));
         }
