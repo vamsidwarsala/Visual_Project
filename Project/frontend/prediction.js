@@ -1,6 +1,4 @@
-const findDatasets = () => fetch('/dataset', {
-    method: 'GET',
-});
+
 
 const getPrediction = (date, time, latitude, longitude, borough) => {
     const params = new URLSearchParams();
@@ -19,6 +17,7 @@ const plot_nyc_map = {
     init: function (width, height) {
         const that = this;
         d3.csv("../nyc_data.csv", function (collisions) {
+            //finding unique boroughs in the dataset
             boroughs = []
             for (i = 0; i < collisions.length; i++) {
                 boroughs.push(collisions[i]['BOROUGH'])
@@ -64,17 +63,21 @@ const plot_nyc_map = {
                 .on("click", p => clicked(p));
 
             function clicked(p) {
-                latitude = p.properties.latitude
-                longitude = p.properties.longitude
                 svg.select("circle").remove();
+                //finding lat,long from x,y
+                var latLong=projection.invert(d3.mouse(svg.node()))
+                latitude = latLong[1];
+                longitude = latLong[0];
+                // check if value is entered properly in the date and time field, if not send alert message
                 if (document.getElementById('date').value != "") {
-                    svg.selectAll("path")
-                        .attr("class", "loading")
+                    // changing the cursor to loading animation
+                    svg.selectAll("path").attr("class", "loading")
                     var dateTime = document.getElementById('date').value.split("T")
-                    var date = dateTime[0]
-                    var time = dateTime[1]
+                    var date = dateTime[0];
+                    var time = dateTime[1];
                     var selectedBorough = p.properties.borough
                     var binaryBorough = [];
+                    //normalising the borough values
                     unique_boroughs.forEach(borough => {
                         if (borough.toLowerCase() == selectedBorough.toLowerCase()) {
                             binaryBorough.push("1")
@@ -82,11 +85,11 @@ const plot_nyc_map = {
                             binaryBorough.push("0")
                         }
                     })
+                    // calling the backend to get the predicted values from the model
                     getPrediction(date, time, latitude, longitude, binaryBorough).then((response) => response.json().then(function (data) {
-                        collision_predction_percentage = data.collision_predction_percentage
-                        collision_predction_percentage = Math.round(parseFloat(collision_predction_percentage) * 100)
-                        svg.selectAll("path")
-                            .attr("class", "default")
+                        collision_predction_percentage = Math.round(parseFloat(data.collision_predction_percentage) * 100)
+                        //changing the cursor to default
+                        svg.selectAll("path").attr("class", "default")
                         var tooltip = d3.select("body")
                             .append("div")
                             //calling tooltip class in css
@@ -131,16 +134,17 @@ const plot_nyc_map = {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    // disabling the past dates
     var today = new Date();
     var month = today.getMonth() + 1;
     var day = today.getDate();
     var year = today.getFullYear();
-    if (month < 10)
-        month = '0' + month.toString();
-    if (day < 10)
-        day = '0' + day.toString();
+    month = (month < 10) ? '0' + month.toString() : month;
+    day = (day < 10) ? '0' + day.toString() : day;
     var minDate = year + '-' + month + '-' + day + 'T00:00';
     document.getElementById("date").min = minDate;
+
     plot_nyc_map.init(800, 700);
 });
 
