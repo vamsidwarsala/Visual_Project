@@ -9,6 +9,7 @@
 
 <head>
     <script>
+        //The code to display text only for the respective radio button is selected https://stackoverflow.com/questions/17621515/how-to-show-and-hide-input-fields-based-on-radio-button-selection
         window.onload = function () {
             document.getElementById('cyclist_injured_disp_div').style.display = 'none';
             document.getElementById('cyclist_killed_disp_div').style.display = 'none';
@@ -124,7 +125,7 @@
                     </div>
                 </div>
             </nav>	
-    <div class="container" style="margin-top: 10px"><h5>Below map displays datapoints on the New York city map which provide information about the collisions that led to injuries or casualities between 2017 and 2019</h5><br>More information can be accessed by hovering mouse over the data points.</div>
+    <div class="container" style="margin-top: 10px"><h5 style="text-align: center">Below map displays datapoints on the New York city map which provide information about the collisions that led to injuries or casualities between 2012 and 2019</h5><br><div style="text-align: center">More information can be accessed by hovering mouse over the data points.</div></div>
     <div class='columnleft'>
         <label><strong>Select to filter by:</strong></label><br>
         <input type="radio" name='action' id="CI" class="option" value="CI" onclick="javascript:cyclist_injured();">
