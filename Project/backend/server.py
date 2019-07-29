@@ -106,6 +106,7 @@ def build_model():
 @app.route('/predict', methods=['POST'])
 @cross_origin()
 def predict():
+    #path of the model
     current_directory_path = path.dirname(__file__)
     model_file_path = path.abspath(path.join(current_directory_path, "..", "model","random_forest_model.sav"))
     loaded_model = joblib.load(model_file_path)
@@ -117,6 +118,7 @@ def predict():
     date = datetime.strptime(date,'%Y-%m-%d')
     time = datetime.strptime(time,'%H:%M')
     prediction_list=[]
+    #converting the date and time into useful features by calculating sin and cosine's
     hour_sin,hour_cos=angle_datetime(time.hour,24)
     prediction_list.append(hour_sin)
     prediction_list.append(hour_cos)
@@ -138,7 +140,6 @@ def predict():
     for value in binary_borough_arr:
         prediction_list.append(float(value))
     y_pred = loaded_model.predict_proba([prediction_list])
-    print(prediction_list)
     collision_predction_percentage=str(y_pred[0][1])
     return jsonify({"collision_predction_percentage":collision_predction_percentage})
 
