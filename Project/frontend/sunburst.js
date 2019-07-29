@@ -120,7 +120,7 @@ const plot_sunburst_map = {
         d3.partition()
             .size([2 * Math.PI, root.height + 1])(root);
 
-        var radius = Math.min(width, height) / 9;
+        var radius = Math.min(width, height) / 9;   
         //arc for each path
         var arc = d3.arc()
             .startAngle(d => d.x0)

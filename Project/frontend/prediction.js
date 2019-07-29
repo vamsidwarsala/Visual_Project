@@ -105,7 +105,7 @@ const plot_nyc_map = {
                                     )
                                     .style("right", "220px")
                                     .style("top", "400px")
-                                //.style("background-color", color.transform(element['quality']))
+
                                 d3.select(this)
                                     .style("stroke", "black")
                                     .style("opacity", 1)
